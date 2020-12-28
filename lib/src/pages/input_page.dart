@@ -10,6 +10,8 @@ class _InputPageState extends State<InputPage> {
   String _email = '';
   String _pwd = '';
   String _fecha = '';
+  String _opcselect = 'Volar';
+  List<String> _poderes = ['Volar', 'Rayos X', 'Aliento', 'Super Fuerza'];
 
   TextEditingController _inputFieldDate = new TextEditingController();
 
@@ -34,6 +36,8 @@ class _InputPageState extends State<InputPage> {
           _crearPwd(),
           Divider(),
           _crearFecha(context),
+          Divider(),
+          _crearDropdown(),
         ],
       ),
     );
@@ -149,5 +153,28 @@ class _InputPageState extends State<InputPage> {
         _inputFieldDate.text = _fecha;
       });
     }
+  }
+
+  List<DropdownMenuItem<String>> getOpcionesDropdown() {
+    List<DropdownMenuItem<String>> lista = new List();
+    _poderes.forEach((poder) {
+      lista.add(DropdownMenuItem(
+        child: Text(poder),
+        value: poder,
+      ));
+    });
+    return lista;
+  }
+
+  Widget _crearDropdown() {
+    return DropdownButton(
+      value: _opcselect,
+      items: getOpcionesDropdown(),
+      onChanged: (value) {
+        setState(() {
+          _opcselect = value;
+        });
+      },
+    );
   }
 }
