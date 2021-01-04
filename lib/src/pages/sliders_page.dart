@@ -7,6 +7,7 @@ class SliderPage extends StatefulWidget {
 
 class _SliderPageState extends State<SliderPage> {
   double _valueSlider = 1.0;
+  bool _bloquearcheck = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,10 +15,12 @@ class _SliderPageState extends State<SliderPage> {
         title: Text('Slider'),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 50.0),
+        padding: EdgeInsets.only(top: 10.0),
         child: Column(
           children: [
             _crearSlider(),
+            _crearCheckbox(),
+            _crearSwitch(),
             Expanded(
               child: _crearImagen(),
             ),
@@ -29,15 +32,41 @@ class _SliderPageState extends State<SliderPage> {
 
   Widget _crearSlider() {
     return Slider(
-      activeColor: Colors.blueGrey,
+      activeColor: Colors.blue,
       label: 'Tamaño Imagen',
-      divisions: 10,
+      divisions: 50,
       value: _valueSlider,
       min: 0,
       max: 500,
+      onChanged: (_bloquearcheck)
+          ? null
+          : (value) {
+              setState(() {
+                _valueSlider = value;
+              });
+            },
+    );
+  }
+
+  Widget _crearCheckbox() {
+    return CheckboxListTile(
+      title: Text('Bloquear slider'),
+      value: _bloquearcheck,
       onChanged: (value) {
         setState(() {
-          _valueSlider = value;
+          _bloquearcheck = value;
+        });
+      },
+    );
+  }
+
+  Widget _crearSwitch() {
+    return SwitchListTile(
+      title: Text('Bloquear slider'),
+      value: _bloquearcheck,
+      onChanged: (value) {
+        setState(() {
+          _bloquearcheck = value;
         });
       },
     );
