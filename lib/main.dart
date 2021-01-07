@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() => runApp(MyApp());
 
@@ -30,6 +33,10 @@ class _MyHomePageState extends State<MyHomePage> {
           return Scaffold(
             appBar: AppBar(title: Text('Baby Name Votes')),
             body: _buildBody(context),
+            floatingActionButton: Padding(
+              padding: EdgeInsets.all(30.0),
+              child: _newButton(),
+            ),
           );
         });
   }
@@ -71,6 +78,63 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Widget _newButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        getImages(true);
+      },
+      child: Icon(Icons.image),
+      backgroundColor: Colors.grey,
+      elevation: 5.0,
+    );
+  }
+
+  Widget _newContainer(File url) {
+    return new Container(
+      color: Colors.black45,
+      width: 50.0,
+      height: 300.0,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.file(url),
+        ],
+      ),
+    );
+  }
+
+  // Image Picker
+  List<File> _images = [];
+  File _image; // Used only if you need a single picture
+
+  Future getImages(bool gallery) async {
+    ImagePicker picker = ImagePicker();
+    PickedFile pickedFile;
+    // Let user select photo from gallery
+    if (gallery) {
+      pickedFile = await picker.getImage(
+        source: ImageSource.gallery,
+      );
+    }
+    // Otherwise open camera to get new photo
+    else {
+      pickedFile = await picker.getImage(
+        source: ImageSource.camera,
+      );
+    }
+
+    setState(() {
+      if (pickedFile != null) {
+        //_images.add(File(pickedFile.path));
+        _image = File(pickedFile.path); // Use if you only need a single picture
+        _newContainer(_image);
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 }
 
